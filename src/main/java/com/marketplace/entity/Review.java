@@ -33,5 +33,5 @@ public class Review {
 
     @OneToOne(optional = false)
     @JoinColumn(name = "id", referencedColumnName = "id")
-    private Review review;
+    private Response response;
 }

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,4 +20,7 @@ public class Category {
 
     @Column(nullable = false)
     private String name;
+
+    @OneToMany(targetEntity = Product.class, mappedBy = "category", fetch = FetchType.LAZY)
+    private Set<Product> products;
 }

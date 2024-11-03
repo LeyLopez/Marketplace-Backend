@@ -18,7 +18,7 @@ public class OrderItems {
     private Long id;
 
     @Column(nullable = false)
-    private Long quantity;
+    private Integer quantity;
 
     @ManyToOne(targetEntity = Order.class)
     private Order order;
