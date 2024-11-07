@@ -1,12 +1,12 @@
 package com.marketplace.controller;
 
 import com.marketplace.dto.OrderItemsDTO;
+import com.marketplace.exceptions.NotFoundException;
 import com.marketplace.service.OrderItemsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/order-items")
@@ -22,7 +22,7 @@ public class OrderItemsController {
     public ResponseEntity<OrderItemsDTO> getOrderItemById(@PathVariable Long id) {
         return orderItemsService.findById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("Order item with id " + id + " not found"));
     }
 
     @GetMapping
@@ -40,11 +40,14 @@ public class OrderItemsController {
     public ResponseEntity<OrderItemsDTO> updateOrderItem(@PathVariable Long id, @RequestBody OrderItemsDTO orderItemsDTO) {
         return orderItemsService.update(id, orderItemsDTO)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("Order item with id " + id + " not found"));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrderItem(@PathVariable Long id) {
+        if (!orderItemsService.existsById(id)) {
+            throw new NotFoundException("Order item with id " + id + " not found");
+        }
         orderItemsService.delete(id);
         return ResponseEntity.noContent().build();
     }

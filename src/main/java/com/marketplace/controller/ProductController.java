@@ -1,6 +1,7 @@
 package com.marketplace.controller;
 
 import com.marketplace.dto.ProductDTO;
+import com.marketplace.exceptions.NotFoundException;
 import com.marketplace.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class ProductController {
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
         return productService.findById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("Product with id " + id + " not found"));
     }
 
     @GetMapping
@@ -39,11 +40,14 @@ public class ProductController {
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
         return productService.update(id, productDTO)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("Product with id " + id + " not found"));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        if (!productService.existsById(id)) {
+            throw new NotFoundException("Product with id " + id + " not found");
+        }
         productService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -52,6 +56,6 @@ public class ProductController {
     public ResponseEntity<ProductDTO> getProductByName(@PathVariable String name) {
         return productService.findByName(name)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("Product with name '" + name + "' not found"));
     }
 }

@@ -1,12 +1,12 @@
 package com.marketplace.controller;
 
 import com.marketplace.dto.CategoryDTO;
+import com.marketplace.exceptions.NotFoundException;
 import com.marketplace.service.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -22,7 +22,7 @@ public class CategoryController {
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
         return categoryService.findById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("Category with id " + id + " not found"));
     }
 
     @GetMapping
@@ -40,11 +40,14 @@ public class CategoryController {
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
         return categoryService.update(id, categoryDTO)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("Category with id " + id + " not found"));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        if (!categoryService.existsById(id)) {
+            throw new NotFoundException("Category with id " + id + " not found");
+        }
         categoryService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -53,6 +56,6 @@ public class CategoryController {
     public ResponseEntity<CategoryDTO> getCategoryByName(@PathVariable String name) {
         return categoryService.findByName(name)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("Category with name '" + name + "' not found"));
     }
 }

@@ -1,6 +1,7 @@
 package com.marketplace.controller;
 
 import com.marketplace.dto.UserDTO;
+import com.marketplace.exceptions.NotFoundException;
 import com.marketplace.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +22,14 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         return userService.findById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
         return userService.findByEmail(email)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
     }
 
     @GetMapping
@@ -46,11 +47,14 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
         return userService.update(id, userDTO)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        if (!userService.existsById(id)) {
+            throw new NotFoundException("User with id " + id + " not found");
+        }
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
