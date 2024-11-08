@@ -1,6 +1,7 @@
 package com.marketplace.controller;
 
 import com.marketplace.dto.ReviewDTO;
+import com.marketplace.entity.Response;
 import com.marketplace.exceptions.NotFoundException;
 import com.marketplace.service.ReviewService;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,8 @@ public class ReviewController {
     }
 
     @GetMapping
-    public List<ReviewDTO> getAllReviews() {
-        return reviewService.findAll();
+    public ResponseEntity<List<ReviewDTO>> getAllReviews() {
+        return ResponseEntity.ok(reviewService.findAll());
     }
 
     @PostMapping
@@ -44,11 +45,10 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
-        if (!reviewService.existsById(id)) {
-            throw new NotFoundException("Review with id " + id + " not found");
-        }
-        reviewService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ReviewDTO> deleteReview(@PathVariable Long id) {
+        return reviewService.findById(id).map(r->{
+            reviewService.delete(id);
+            return ResponseEntity.ok().body(r);
+        }).orElseThrow(() -> new NotFoundException("Review with id " + id + " not found"));
     }
 }

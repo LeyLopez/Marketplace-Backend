@@ -26,8 +26,8 @@ public class OrderItemsController {
     }
 
     @GetMapping
-    public List<OrderItemsDTO> getAllOrderItems() {
-        return orderItemsService.findAll();
+    public ResponseEntity<List<OrderItemsDTO>> getAllOrderItems() {
+        return ResponseEntity.ok(orderItemsService.findAll());
     }
 
     @PostMapping
@@ -44,11 +44,10 @@ public class OrderItemsController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrderItem(@PathVariable Long id) {
-        if (!orderItemsService.existsById(id)) {
-            throw new NotFoundException("Order item with id " + id + " not found");
-        }
-        orderItemsService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<OrderItemsDTO> deleteOrderItem(@PathVariable Long id) {
+        return orderItemsService.findById(id).map(o->{
+            orderItemsService.delete(id);
+            return ResponseEntity.ok().body(o);
+        }).orElseThrow(()->new NotFoundException("Order item with id " + id + " not found"));
     }
 }

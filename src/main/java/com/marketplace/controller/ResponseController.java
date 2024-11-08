@@ -39,16 +39,15 @@ public class ResponseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteResponse(@PathVariable Long id) {
-        if (!responseService.existsById(id)) {
-            throw new NotFoundException("Response with id " + id + " not found");
-        }
-        responseService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ResponseDTO> deleteResponse(@PathVariable Long id) {
+        return responseService.findById(id).map(r->{
+            responseService.delete(id);
+            return ResponseEntity.ok().body(r);
+        }).orElseThrow(() -> new NotFoundException("Response with id " + id + " not found"));
     }
 
     @GetMapping
-    public List<ResponseDTO> getAllResponses() {
-        return responseService.findAll();
+    public ResponseEntity<List<ResponseDTO>> getAllResponses() {
+        return ResponseEntity.ok(responseService.findAll());
     }
 }

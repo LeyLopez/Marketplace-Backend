@@ -1,6 +1,7 @@
 package com.marketplace.controller;
 
 import com.marketplace.dto.OrderDTO;
+import com.marketplace.entity.Response;
 import com.marketplace.exceptions.NotFoundException;
 import com.marketplace.service.OrderService;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderDTO> getAllOrders() {
-        return orderService.findAll();
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        return ResponseEntity.ok(orderService.findAll());
     }
 
     @PostMapping
@@ -44,11 +45,12 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
-        if (!orderService.existsById(id)) {
-            throw new NotFoundException("Order with id " + id + " not found");
-        }
-        orderService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<OrderDTO> deleteOrder(@PathVariable Long id) {
+        return orderService.findById(id).map(o->{
+                    orderService.deleteById(id);
+                    return ResponseEntity.ok().body(o);
+                }
+
+        ).orElseThrow(()->new NotFoundException("Order with id "+id+" not found"));
     }
 }

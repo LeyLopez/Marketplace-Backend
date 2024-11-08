@@ -26,8 +26,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<CategoryDTO> getAllCategories() {
-        return categoryService.findAll();
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+        return ResponseEntity.ok(categoryService.findAll());
     }
 
     @PostMapping
@@ -44,12 +44,11 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        if (!categoryService.existsById(id)) {
-            throw new NotFoundException("Category with id " + id + " not found");
-        }
-        categoryService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable Long id) {
+        return categoryService.findById(id).map(c->{
+            categoryService.delete(id);
+            return ResponseEntity.ok().body(c);
+        }).orElseThrow(()->new NotFoundException("Category with id " + id + " not found"));
     }
 
     @GetMapping("/name/{name}")

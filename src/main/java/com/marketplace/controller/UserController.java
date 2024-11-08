@@ -33,8 +33,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDTO> getAllUsers() {
-        return userService.findAll();
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @PostMapping
@@ -51,11 +51,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        if (!userService.existsById(id)) {
-            throw new NotFoundException("User with id " + id + " not found");
-        }
-        userService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<UserDTO> deleteUser(@PathVariable Long id) {
+        return userService.findById(id).map(u->{
+            userService.delete(id);
+            return ResponseEntity.ok().body(u);
+        }).orElseThrow(()->new NotFoundException("User with id " + id + " not found"));
     }
 }

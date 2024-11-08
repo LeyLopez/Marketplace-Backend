@@ -26,8 +26,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductDTO> getAllProducts() {
-        return productService.findAll();
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        return ResponseEntity.ok(productService.findAll());
     }
 
     @PostMapping
@@ -44,12 +44,11 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        if (!productService.existsById(id)) {
-            throw new NotFoundException("Product with id " + id + " not found");
-        }
-        productService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ProductDTO> deleteProduct(@PathVariable Long id) {
+        return productService.findById(id).map(p->{
+            productService.delete(id);
+            return ResponseEntity.ok().body(p);
+        }).orElseThrow(() -> new NotFoundException("Product with id " + id + " not found"));
     }
 
     @GetMapping("/name/{name}")
