@@ -4,7 +4,7 @@ import com.marketplace.entity.Response;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ResponseMapper {
 
     ResponseDTO toDto(Response response);

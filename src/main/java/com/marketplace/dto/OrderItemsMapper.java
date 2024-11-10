@@ -4,7 +4,7 @@ import com.marketplace.entity.OrderItems;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface OrderItemsMapper {
 
     OrderItemsDTO toDto(OrderItems orderItems);

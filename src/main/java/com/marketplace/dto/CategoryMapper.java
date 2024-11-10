@@ -4,7 +4,7 @@ import com.marketplace.entity.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CategoryMapper {
 
     CategoryDTO toDto(Category category);
