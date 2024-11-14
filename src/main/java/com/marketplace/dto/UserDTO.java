@@ -9,5 +9,5 @@ public record UserDTO(Long id,
                       String password,
                       String phone,
                       String address,
-                      Rol rol) {
+                      String rol) {
 }
