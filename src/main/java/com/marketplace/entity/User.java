@@ -1,5 +1,7 @@
 package com.marketplace.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,18 +42,22 @@ public class User {
     private Rol rol;
 
     @OneToMany(targetEntity = Review.class, mappedBy = "client", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JsonIgnore
     private Set<Review> reviews;
 
     @OneToMany(targetEntity = Review.class, mappedBy = "salesman", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JsonIgnore
     private Set<Review> salesReviews;
 
     @OneToMany(targetEntity = Order.class, mappedBy = "client", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JsonIgnore
     private Set<Order> orders;
 
     @OneToMany(targetEntity = Product.class, mappedBy = "salesman", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JsonIgnore
     private Set<Product> products;
-
-
-
-    
 }

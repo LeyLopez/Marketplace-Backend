@@ -58,6 +58,7 @@ public class ProductServiceImp implements ProductService {
                     productInBD.setPrice(productDTO.price());
                     productInBD.setCategory(productDTO.category());
                     productInBD.setAvailability(productDTO.availability());
+                    productInBD.setImage(productDTO.image());
                     productInBD.setStatus(productDTO.status());
                     productInBD.setSalesman(productDTO.salesman());
 

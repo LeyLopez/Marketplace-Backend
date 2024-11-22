@@ -1,5 +1,8 @@
 package com.marketplace.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,15 +26,23 @@ public class Review {
     private String comment;
 
     @ManyToOne(targetEntity = User.class)
+    @JsonBackReference
+    @JsonIgnore
     private User client;
 
     @ManyToOne(targetEntity = User.class)
+    @JsonBackReference
+    @JsonIgnore
     private User salesman;
 
     @ManyToOne(targetEntity = Product.class)
+    @JsonBackReference
+    @JsonIgnore
     private Product product;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = true)
     @JoinColumn(name = "id", referencedColumnName = "id")
+    @JsonBackReference
+    @JsonIgnore
     private Response response;
 }

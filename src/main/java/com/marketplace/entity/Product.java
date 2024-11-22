@@ -1,5 +1,8 @@
 package com.marketplace.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,22 +33,31 @@ public class Product {
     @Column(nullable = false)
     private Integer availability;
 
+    @Column(nullable = false)
+    private String image;
+
 
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
 
 
     @ManyToOne(targetEntity = Category.class)
+    @JsonBackReference
+    @JsonIgnore
     private Category category;
 
     @ManyToOne(targetEntity = User.class)
+    @JsonBackReference
+    @JsonIgnore
     private User salesman;
 
     @OneToMany(targetEntity = Review.class, mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JsonIgnore
     private Set<Review> reviews;
 
     @OneToMany(targetEntity = OrderItems.class, mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JsonIgnore
     private Set<OrderItems> orderItems;
-
-
 }

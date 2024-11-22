@@ -9,6 +9,7 @@ public record ProductDTO(Long id,
                          String description,
                          Double price,
                          Integer availability,
+                         String image,
                          ProductStatus status,
                          Category category,
                          User salesman) {
