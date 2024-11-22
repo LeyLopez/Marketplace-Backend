@@ -1,5 +1,8 @@
 package com.marketplace.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,11 +28,12 @@ public class Order {
     private OrderStatus status;
 
     @ManyToOne(targetEntity = User.class)
+    @JsonBackReference
+    @JsonIgnore
     private User client;
 
-    @OneToMany(targetEntity = OrderItems.class)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JsonIgnore
     private Set<OrderItems> orderItems;
-
-
-
 }

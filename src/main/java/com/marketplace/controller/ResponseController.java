@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/responses")
+@CrossOrigin("*")
 public class ResponseController {
 
     private final ResponseService responseService;

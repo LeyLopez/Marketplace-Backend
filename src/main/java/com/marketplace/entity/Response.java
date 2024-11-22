@@ -1,5 +1,7 @@
 package com.marketplace.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +22,8 @@ public class Response {
     private String description;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = "review_id", referencedColumnName = "id")
+    @JsonBackReference
+    @JsonIgnore
     private Review review;
 }

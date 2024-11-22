@@ -59,7 +59,7 @@ public class UserServiceImp implements UserService {
                     userInBD.setAddress(userDTO.address());
                     userInBD.setPhone(userDTO.phone());
                     userInBD.setLastname(userDTO.lastname());
-                    userInBD.setRol(userDTO.rol());
+                    userInBD.setRol(userMapper.mapStringToRol(userDTO.rol()));
 
                     return userRepository.save(userInBD);
                 }).map(userMapper::toDto);
